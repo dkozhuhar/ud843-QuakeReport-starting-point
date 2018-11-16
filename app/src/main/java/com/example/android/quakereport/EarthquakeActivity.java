@@ -17,13 +17,17 @@ package com.example.android.quakereport;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
 public class EarthquakeActivity extends AppCompatActivity {
-
+    private RecyclerView.LayoutManager mLayoutManager;
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
 
     @Override
@@ -42,14 +46,18 @@ public class EarthquakeActivity extends AppCompatActivity {
         earthquakes.add("Paris");
 
         // Find a reference to the {@link ListView} in the layout
-        ListView earthquakeListView = (ListView) findViewById(R.id.list);
+        RecyclerView earthquakeRecyclerView =  findViewById(R.id.list);
+        mLayoutManager = new LinearLayoutManager(this);
+        earthquakeRecyclerView.setLayoutManager(mLayoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(earthquakeRecyclerView.getContext(),
+                LinearLayout.VERTICAL);
+        earthquakeRecyclerView.addItemDecoration(dividerItemDecoration);
 
         // Create a new {@link ArrayAdapter} of earthquakes
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_list_item_1, earthquakes);
+        MyRecyclerAdapter adapter = new MyRecyclerAdapter(earthquakes);
 
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
-        earthquakeListView.setAdapter(adapter);
+        earthquakeRecyclerView.setAdapter(adapter);
     }
 }
