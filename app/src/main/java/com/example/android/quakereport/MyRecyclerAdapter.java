@@ -11,14 +11,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.MyViewHolder> {
-    private ArrayList<String> list;
-    public MyRecyclerAdapter(ArrayList<String> list1) {
+    private ArrayList<Eartquake> list;
+    public MyRecyclerAdapter(ArrayList<Eartquake> list1) {
         list = list1;
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView listItemView;
-        public MyViewHolder(TextView view) {
+        private LinearLayout listItemView;
+        public MyViewHolder(LinearLayout view) {
             super(view);
             listItemView = view;
         }
@@ -26,7 +26,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
 
 
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int integer) {
-        TextView listItemView = (TextView) LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false);
+        LinearLayout listItemView = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.element, parent, false);
         MyViewHolder vh = new MyViewHolder(listItemView);
         return vh;
     }
@@ -37,7 +37,12 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        TextView textView = holder.listItemView.findViewById(android.R.id.text1);
-        textView.setText(list.get(position));
+        TextView placeView = holder.listItemView.findViewById(R.id.place);
+        placeView.setText(list.get(position).getPlace());
+        TextView dateView = holder.listItemView.findViewById(R.id.date);
+        dateView.setText(list.get(position).getmDate());
+        TextView magnitudeView = holder.listItemView.findViewById(R.id.magnitude);
+        magnitudeView.setText(list.get(position).getMagnitude());
+
     }
 }

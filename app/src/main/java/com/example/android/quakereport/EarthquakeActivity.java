@@ -15,16 +15,23 @@
  */
 package com.example.android.quakereport;
 
+
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class EarthquakeActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
@@ -36,14 +43,16 @@ public class EarthquakeActivity extends AppCompatActivity {
         setContentView(R.layout.earthquake_activity);
 
         // Create a fake list of earthquake locations.
-        ArrayList<String> earthquakes = new ArrayList<>();
-        earthquakes.add("San Francisco");
-        earthquakes.add("London");
-        earthquakes.add("Tokyo");
-        earthquakes.add("Mexico City");
-        earthquakes.add("Moscow");
-        earthquakes.add("Rio de Janeiro");
-        earthquakes.add("Paris");
+        ArrayList<Eartquake> earthquakes = new ArrayList<>();
+
+        Date date = Calendar.getInstance().getTime();
+        earthquakes.add(new Eartquake(7.2f,"San Francisco", date));
+        earthquakes.add(new Eartquake(2.8f,"London", date));
+        earthquakes.add(new Eartquake(6.1f,"Tokyo", date));
+        earthquakes.add(new Eartquake(3.9f,"Mexico City", date));
+        earthquakes.add(new Eartquake(5.4f,"Moscow", date));
+        earthquakes.add(new Eartquake(4.9f,"Rio de Janeiro", date));
+        earthquakes.add(new Eartquake(1.6f,"Paris", date));
 
         // Find a reference to the {@link ListView} in the layout
         RecyclerView earthquakeRecyclerView =  findViewById(R.id.list);
