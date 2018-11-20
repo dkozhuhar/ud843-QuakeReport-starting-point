@@ -3,34 +3,33 @@ package com.example.android.quakereport;
 import java.util.Date;
 
 public class Eartquake {
-    private float magnitude;
+    private String magnitude;
     private String place;
-    private Date mDate;
-    private void setMagnitude(float magnitude) {
+    private long mDate;
+    private void setMagnitude(String magnitude) {
         this.magnitude = magnitude;
     }
-    private void setmDate(Date mDate) {
+    private void setmDate(long mDate) {
         this.mDate = mDate;
     }
     private void setPlace(String place) {
         this.place = place;
     }
 
-    public String getmDate() {
-        return mDate.toString();
+    public long getmDate() {
+        return mDate;
     }
 
     public String getMagnitude() {
-        return Float.toString(magnitude);
+        return magnitude;
     }
 
     public String getPlace() {
         return place;
     }
-    public Eartquake(float mag, String placee, Date date){
+    public Eartquake(String mag, String placee, long date){
         setMagnitude(mag);
         setmDate(date);
-
         setPlace(placee);
     }
 }

@@ -8,7 +8,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.MyViewHolder> {
     private ArrayList<Eartquake> list;
@@ -38,9 +41,26 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         TextView placeView = holder.listItemView.findViewById(R.id.place);
-        placeView.setText(list.get(position).getPlace());
+        String wholePlace = list.get(position).getPlace();
+        String[] separated = new String[2];
+        if (wholePlace.contains("of")) {
+            separated = wholePlace.split("of");
+            separated[0] = separated[0] + "of";
+            separated[1] = separated[1].trim();
+        } else {
+            separated[0] = "Near the";
+            separated[1] = wholePlace;
+        }
+        placeView.setText(separated[1]);
+        TextView offsetView = holder.listItemView.findViewById(R.id.offset);
+        offsetView.setText(separated[0]);
         TextView dateView = holder.listItemView.findViewById(R.id.date);
-        dateView.setText(list.get(position).getmDate());
+        Date dateTime = new Date(list.get(position).getmDate());
+        DateFormat formatDate = SimpleDateFormat.getDateInstance();
+        dateView.setText(formatDate.format(dateTime));
+        TextView timeView = holder.listItemView.findViewById(R.id.time);
+        DateFormat formatTime = SimpleDateFormat.getTimeInstance();
+        timeView.setText(formatTime.format(dateTime));
         TextView magnitudeView = holder.listItemView.findViewById(R.id.magnitude);
         magnitudeView.setText(list.get(position).getMagnitude());
 
