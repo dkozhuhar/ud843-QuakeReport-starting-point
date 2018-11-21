@@ -1,5 +1,6 @@
 package com.example.android.quakereport;
 
+import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,14 +40,23 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
         return list.size();
     }
 
+    private int getMagnitudeColor(double mag){
+        int floorInt = (int) Math.floor(mag);
+        switch (floorInt) {
+            case
+        }
+    }
+
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         TextView placeView = holder.listItemView.findViewById(R.id.place);
         String wholePlace = list.get(position).getPlace();
         String[] separated = new String[2];
-        if (wholePlace.contains("of")) {
-            separated = wholePlace.split("of");
-            separated[0] = separated[0] + "of";
+        String DELIMITER = " of ";
+        if (wholePlace.contains(DELIMITER)) {
+            separated = wholePlace.split(DELIMITER);
+            separated[0] = separated[0] + DELIMITER;
+            separated[0] = separated[0].trim();
             separated[1] = separated[1].trim();
         } else {
             separated[0] = "Near the";
@@ -61,8 +72,16 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
         TextView timeView = holder.listItemView.findViewById(R.id.time);
         DateFormat formatTime = SimpleDateFormat.getTimeInstance();
         timeView.setText(formatTime.format(dateTime));
+        DecimalFormat decimalFormat = new DecimalFormat("0.0");
         TextView magnitudeView = holder.listItemView.findViewById(R.id.magnitude);
-        magnitudeView.setText(list.get(position).getMagnitude());
+        // Set the proper background color on the magnitude circle.
+        // Fetch the background from the TextView, which is a GradientDrawable.
+        GradientDrawable magnitudeCircle = (GradientDrawable) magnitudeView.getBackground();
+        // Get the appropriate background color based on the current earthquake magnitude
+        int magnitudeColor = getMagnitudeColor(currentEarthquake.getMagnitude());
+        // Set the color on the magnitude circle
+        magnitudeCircle.setColor(magnitudeColor);
+        magnitudeView.setText(decimalFormat.format(list.get(position).getMagnitude()));
 
     }
 }

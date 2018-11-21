@@ -54,7 +54,7 @@ public final class QueryUtils {
             for (int i = 0; i < jsonEarthquakes.length(); i++){
                 JSONObject row = jsonEarthquakes.getJSONObject(i);
                 row = row.getJSONObject("properties");
-                Eartquake earthquake = new Eartquake(row.optString("mag"),row.optString("place"),row.optLong("time"));
+                Eartquake earthquake = new Eartquake(row.optDouble("mag"),row.optString("place"),row.optLong("time"));
                 earthquakes.add(earthquake);
             }
 
