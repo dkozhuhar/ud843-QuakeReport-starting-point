@@ -4,6 +4,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -42,8 +43,43 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
 
     private int getMagnitudeColor(double mag){
         int floorInt = (int) Math.floor(mag);
+        if (floorInt < 0) {
+            floorInt = 0;
+        }
+
         switch (floorInt) {
-            case
+            case 0:
+            case 1: {
+                return R.color.magnitude1;
+            }
+            case 2: {
+                return R.color.magnitude2;
+            }
+            case 3: {
+                return R.color.magnitude3;
+            }
+            case 4: {
+                return R.color.magnitude4;
+            }
+            case 5: {
+                return R.color.magnitude5;
+            }
+            case 6: {
+                Log.w("MyRecyclerAdapter","reached magnitude of 6 to 7");
+                return R.color.magnitude6;
+            }
+            case 7: {
+                return R.color.magnitude7;
+            }
+            case 8: {
+                return R.color.magnitude8;
+            }
+            case 9: {
+                return R.color.magnitude9;
+            }
+            default: {
+                return R.color.magnitude10plus;
+            }
         }
     }
 
@@ -78,10 +114,11 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
         // Fetch the background from the TextView, which is a GradientDrawable.
         GradientDrawable magnitudeCircle = (GradientDrawable) magnitudeView.getBackground();
         // Get the appropriate background color based on the current earthquake magnitude
-        int magnitudeColor = getMagnitudeColor(currentEarthquake.getMagnitude());
+        double magnitude = list.get(position).getMagnitude();
+        //int magnitudeColor = getMagnitudeColor(magnitude);
         // Set the color on the magnitude circle
-        magnitudeCircle.setColor(magnitudeColor);
-        magnitudeView.setText(decimalFormat.format(list.get(position).getMagnitude()));
-
+        //magnitudeCircle.setColor(getMagnitudeColor(magnitude));
+        magnitudeCircle.setColor(magnitudeView.getResources().getColor(getMagnitudeColor(magnitude),null));
+        magnitudeView.setText(decimalFormat.format(magnitude));
     }
 }
