@@ -6,6 +6,7 @@ public class Eartquake {
     private double magnitude;
     private String place;
     private long mDate;
+    private String url;
     private void setMagnitude(double magnitude) {
         this.magnitude = magnitude;
     }
@@ -15,7 +16,12 @@ public class Eartquake {
     private void setPlace(String place) {
         this.place = place;
     }
-
+    private void setUrl(String mUrl) {
+        this.url = mUrl;
+    }
+    public String getUrl(){
+        return url;
+    }
     public long getmDate() {
         return mDate;
     }
@@ -27,9 +33,10 @@ public class Eartquake {
     public String getPlace() {
         return place;
     }
-    public Eartquake(double mag, String placee, long date){
+    public Eartquake(double mag, String placee, long date, String mUrl){
         setMagnitude(mag);
         setmDate(date);
         setPlace(placee);
+        setUrl(mUrl);
     }
 }

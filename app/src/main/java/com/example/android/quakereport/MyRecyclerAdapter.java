@@ -1,11 +1,16 @@
 package com.example.android.quakereport;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,6 +20,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.MyViewHolder> {
     private ArrayList<Eartquake> list;
@@ -84,7 +90,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
         TextView placeView = holder.listItemView.findViewById(R.id.place);
         String wholePlace = list.get(position).getPlace();
         String[] separated = new String[2];
@@ -120,5 +126,21 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
         //magnitudeCircle.setColor(getMagnitudeColor(magnitude));
         magnitudeCircle.setColor(magnitudeView.getResources().getColor(getMagnitudeColor(magnitude),null));
         magnitudeView.setText(decimalFormat.format(magnitude));
+
+        holder.listItemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Making an intent
+                Intent i = new Intent(Intent.ACTION_VIEW,Uri.parse(list.get(position).getUrl()));
+                // Checking if device capable of handling generated intent
+                PackageManager packageManager = v.getContext().getPackageManager();
+                List<ResolveInfo> activities = packageManager.queryIntentActivities(i, PackageManager.MATCH_DEFAULT_ONLY);
+                boolean isIntentSafe = activities.size() > 0;
+                if (isIntentSafe) {
+                    // Actually sending Intent
+                    v.getContext().startActivity(i);
+                }
+            }
+        });
     }
 }

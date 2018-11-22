@@ -49,10 +49,11 @@ public class EarthquakeActivity extends AppCompatActivity {
         RecyclerView earthquakeRecyclerView =  findViewById(R.id.list);
         mLayoutManager = new LinearLayoutManager(this);
         earthquakeRecyclerView.setLayoutManager(mLayoutManager);
+        /*
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(earthquakeRecyclerView.getContext(),
                 LinearLayout.VERTICAL);
         earthquakeRecyclerView.addItemDecoration(dividerItemDecoration);
-
+        */
         // Create a new {@link ArrayAdapter} of earthquakes
         MyRecyclerAdapter adapter = new MyRecyclerAdapter(earthquakes);
 
