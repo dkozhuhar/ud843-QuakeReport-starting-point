@@ -16,6 +16,7 @@
 package com.example.android.quakereport;
 
 
+import android.content.Context;
 import android.icu.text.SimpleDateFormat;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import java.lang.ref.WeakReference;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,28 +48,45 @@ public class EarthquakeActivity extends AppCompatActivity {
 
 
         // Create a fake list of earthquake locations.
-        ArrayList<Eartquake> earthquakes = QueryUtils.extractEarthquakes();
+        //List<Eartquake> earthquakes = QueryUtils.extractEarthquakes(QueryUtils.USGS_URL);
 
-        // Find a reference to the {@link ListView} in the layout
-        RecyclerView earthquakeRecyclerView =  findViewById(R.id.list);
-        mLayoutManager = new LinearLayoutManager(this);
-        earthquakeRecyclerView.setLayoutManager(mLayoutManager);
+        new NetworkingTask(this).execute();
+
+    }
+    private class NetworkingTask extends AsyncTask<String, Void, List<Eartquake>> {
+
+        // Creating WeakReference<Context> to disable memory leaks
+        private WeakReference<Context> contextRef;
+        public NetworkingTask(Context context) {
+            super();
+            contextRef = new WeakReference<>(context);
+        }
+
+        @Override
+        protected List<Eartquake> doInBackground(String... strings) {
+            List<Eartquake> earthquakes = QueryUtils.fetchEarthquakeData(QueryUtils.USGS_URL);
+            return earthquakes;
+        }
+
+
+
+        @Override
+        protected void onPostExecute(List<Eartquake> eartquakes) {
+            super.onPostExecute(eartquakes);
+            RecyclerView earthquakeRecyclerView =  findViewById(R.id.list);
+            mLayoutManager = new LinearLayoutManager(contextRef.get());
+            earthquakeRecyclerView.setLayoutManager(mLayoutManager);
         /*
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(earthquakeRecyclerView.getContext(),
                 LinearLayout.VERTICAL);
         earthquakeRecyclerView.addItemDecoration(dividerItemDecoration);
         */
-        // Create a new {@link ArrayAdapter} of earthquakes
-        MyRecyclerAdapter adapter = new MyRecyclerAdapter(earthquakes);
+            // Create a new {@link ArrayAdapter} of earthquakes
+            MyRecyclerAdapter adapter = new MyRecyclerAdapter(eartquakes);
 
-        // Set the adapter on the {@link ListView}
-        // so the list can be populated in the user interface
-        earthquakeRecyclerView.setAdapter(adapter);
-    }
-    private class NetworkingTask extends AsyncTask<String, Void, List<Eartquake>> {
-        @Override
-        protected List<Eartquake> doInBackground(String... strings) {
-            return null;
+            // Set the adapter on the {@link ListView}
+            // so the list can be populated in the user interface
+            earthquakeRecyclerView.setAdapter(adapter);
         }
     }
 }

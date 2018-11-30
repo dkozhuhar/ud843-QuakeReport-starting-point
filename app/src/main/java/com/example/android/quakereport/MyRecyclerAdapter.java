@@ -23,8 +23,8 @@ import java.util.Date;
 import java.util.List;
 
 public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.MyViewHolder> {
-    private ArrayList<Eartquake> list;
-    public MyRecyclerAdapter(ArrayList<Eartquake> list1) {
+    private List<Eartquake> list;
+    public MyRecyclerAdapter(List<Eartquake> list1) {
         list = list1;
     }
 
