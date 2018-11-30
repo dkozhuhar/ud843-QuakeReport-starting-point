@@ -17,6 +17,7 @@ package com.example.android.quakereport;
 
 
 import android.icu.text.SimpleDateFormat;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -31,6 +32,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class EarthquakeActivity extends AppCompatActivity {
@@ -41,6 +43,7 @@ public class EarthquakeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
+
 
         // Create a fake list of earthquake locations.
         ArrayList<Eartquake> earthquakes = QueryUtils.extractEarthquakes();
@@ -60,5 +63,11 @@ public class EarthquakeActivity extends AppCompatActivity {
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
         earthquakeRecyclerView.setAdapter(adapter);
+    }
+    private class NetworkingTask extends AsyncTask<String, Void, List<Eartquake>> {
+        @Override
+        protected List<Eartquake> doInBackground(String... strings) {
+            return null;
+        }
     }
 }
