@@ -16,6 +16,9 @@
 package com.example.android.quakereport;
 
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.icu.text.SimpleDateFormat;
 import android.os.AsyncTask;
@@ -41,52 +44,40 @@ public class EarthquakeActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
 
+
+    // Create a fake list of earthquake locations.
+
+
+    //liveDataEarthquakes = new JsonViewModel(getApplication()).getData();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
+        RecyclerView earthquakeRecyclerView =  findViewById(R.id.list);
+        mLayoutManager = new LinearLayoutManager(this);
+        earthquakeRecyclerView.setLayoutManager(mLayoutManager);
+        JsonViewModel model = ViewModelProviders.of(this).get(JsonViewModel.class);
+        model.getData().observe(this, liveDataEarthquakes -> {
+            MyRecyclerAdapter adapter = new MyRecyclerAdapter(liveDataEarthquakes);
+            earthquakeRecyclerView.setAdapter(adapter);
+        });
 
 
-        // Create a fake list of earthquake locations.
-        //List<Eartquake> earthquakes = QueryUtils.extractEarthquakes(QueryUtils.USGS_URL);
+        // Set the adapter on the {@link ListView}
+        // so the list can be populated in the user interface
 
-        new NetworkingTask(this).execute();
-
-    }
-    private class NetworkingTask extends AsyncTask<String, Void, List<Eartquake>> {
-
-        // Creating WeakReference<Context> to disable memory leaks
-        private WeakReference<Context> contextRef;
-        public NetworkingTask(Context context) {
-            super();
-            contextRef = new WeakReference<>(context);
-        }
-
-        @Override
-        protected List<Eartquake> doInBackground(String... strings) {
-            List<Eartquake> earthquakes = QueryUtils.fetchEarthquakeData(QueryUtils.USGS_URL);
-            return earthquakes;
-        }
-
-
-
-        @Override
-        protected void onPostExecute(List<Eartquake> eartquakes) {
-            super.onPostExecute(eartquakes);
-            RecyclerView earthquakeRecyclerView =  findViewById(R.id.list);
-            mLayoutManager = new LinearLayoutManager(contextRef.get());
-            earthquakeRecyclerView.setLayoutManager(mLayoutManager);
         /*
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(earthquakeRecyclerView.getContext(),
                 LinearLayout.VERTICAL);
         earthquakeRecyclerView.addItemDecoration(dividerItemDecoration);
         */
-            // Create a new {@link ArrayAdapter} of earthquakes
-            MyRecyclerAdapter adapter = new MyRecyclerAdapter(eartquakes);
+        // Create a new {@link ArrayAdapter} of earthquakes
 
-            // Set the adapter on the {@link ListView}
-            // so the list can be populated in the user interface
-            earthquakeRecyclerView.setAdapter(adapter);
-        }
+
+
+
     }
+
 }
