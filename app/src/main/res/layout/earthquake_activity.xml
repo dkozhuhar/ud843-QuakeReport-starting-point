@@ -13,9 +13,28 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<!-- Layout for a list of earthquakes -->
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/list"
+<LinearLayout
     android:orientation="vertical"
+    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+    <!-- Layout for a list of earthquakes -->
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/list"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <TextView
+    android:id="@+id/empty_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:visibility="gone"
+    android:text="Loading" />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        />
+</LinearLayout>

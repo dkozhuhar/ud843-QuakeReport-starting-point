@@ -98,7 +98,13 @@ public final class QueryUtils {
     public static List<Eartquake> fetchEarthquakeData(String requestUrl) {
         // Create URL object
         URL url = createUrl(requestUrl);
-
+        Log.w("QueryUtils","Started fetching data");
+        //Thread.sleep introduced artificially to simulate slow network
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         // Perform HTTP request to the URL and receive a JSON response back
         String jsonResponse = null;
         try {

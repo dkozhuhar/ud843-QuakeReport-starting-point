@@ -21,6 +21,8 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.icu.text.SimpleDateFormat;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -28,9 +30,11 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 import java.text.ParseException;
@@ -41,7 +45,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class EarthquakeActivity extends AppCompatActivity {
-    private RecyclerView.LayoutManager mLayoutManager;
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
 
 
@@ -55,14 +58,44 @@ public class EarthquakeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
+        TextView textview = findViewById(R.id.empty_view);
+        textview.setVisibility(View.GONE);
+        View progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
         RecyclerView earthquakeRecyclerView =  findViewById(R.id.list);
-        mLayoutManager = new LinearLayoutManager(this);
-        earthquakeRecyclerView.setLayoutManager(mLayoutManager);
-        JsonViewModel model = ViewModelProviders.of(this).get(JsonViewModel.class);
-        model.getData().observe(this, liveDataEarthquakes -> {
-            MyRecyclerAdapter adapter = new MyRecyclerAdapter(liveDataEarthquakes);
-            earthquakeRecyclerView.setAdapter(adapter);
-        });
+        earthquakeRecyclerView.setVisibility(View.GONE);
+        //Check network state
+        final ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo activeNetwork = conMgr.getActiveNetworkInfo();
+        if (activeNetwork != null && activeNetwork.isConnected()) {
+            // notify user you are online
+
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+            earthquakeRecyclerView.setLayoutManager(mLayoutManager);
+            JsonViewModel model = ViewModelProviders.of(this).get(JsonViewModel.class);
+            //Log.w(LOG_TAG,"Started observing");
+            model.getData().observe(this, liveDataEarthquakes -> {
+                MyRecyclerAdapter adapter = new MyRecyclerAdapter(liveDataEarthquakes);
+                earthquakeRecyclerView.setAdapter(adapter);
+                textview.setText("No data loaded");
+                progressBar.setVisibility(View.GONE);
+                if (liveDataEarthquakes.isEmpty()) {
+                    textview.setVisibility(View.VISIBLE);
+                    earthquakeRecyclerView.setVisibility(View.GONE);
+                } else {
+                    textview.setVisibility(View.GONE);
+                    earthquakeRecyclerView.setVisibility(View.VISIBLE);
+                }
+            });
+        } else {
+            // notify user you are not online
+            textview.setVisibility(View.VISIBLE);
+            textview.setText("No internet conncetion");
+            earthquakeRecyclerView.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
+        }
+
+
 
 
         // Set the adapter on the {@link ListView}
