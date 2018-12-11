@@ -96,13 +96,17 @@ public final class QueryUtils {
             String minMagnitude = sharedPrefs.getString(
                     context.getString(R.string.settings_min_magnitude_key),
                     context.getString(R.string.settings_min_magnitude_default));
+            String orderBy = sharedPrefs.getString(
+                    context.getString(R.string.settings_order_by_key),
+                    context.getString(R.string.settings_order_by_default)
+            );
             Uri baseUri = Uri.parse(stringUrl);
             Uri.Builder uriBuilder = baseUri.buildUpon();
 
             uriBuilder.appendQueryParameter("format", "geojson");
             uriBuilder.appendQueryParameter("limit", "10");
             uriBuilder.appendQueryParameter("minmag", minMagnitude);
-            uriBuilder.appendQueryParameter("orderby", "time");
+            uriBuilder.appendQueryParameter("orderby", orderBy);
             url = new URL(uriBuilder.toString());
         } catch (MalformedURLException e) {
             Log.e(LOG_TAG, "Error with creating URL ", e);
