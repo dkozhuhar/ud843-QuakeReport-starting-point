@@ -23,7 +23,7 @@ public class JsonLiveData extends LiveData<List<Eartquake>> {
             protected List<Eartquake> doInBackground(String... strings) {
                 // Parse the JSON using the library of your choice
                 Log.w("JsonLiveData","Starting loading");
-                List<Eartquake> earthquakes = QueryUtils.fetchEarthquakeData(QueryUtils.USGS_URL);
+                List<Eartquake> earthquakes = QueryUtils.fetchEarthquakeData(QueryUtils.USGS_URL, context);
                 return earthquakes;
             }
             @Override

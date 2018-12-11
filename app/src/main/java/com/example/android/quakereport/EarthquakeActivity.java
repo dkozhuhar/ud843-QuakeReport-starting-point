@@ -50,13 +50,6 @@ import java.util.Locale;
 public class EarthquakeActivity extends AppCompatActivity {
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
 
-
-    // Create a fake list of earthquake locations.
-
-
-    //liveDataEarthquakes = new JsonViewModel(getApplication()).getData();
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,5 +1,9 @@
 package com.example.android.quakereport;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -26,7 +30,8 @@ public final class QueryUtils {
     /** Tag for the log messages */
     public static final String LOG_TAG = QueryUtils.class.getSimpleName();
 
-    public static final String USGS_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
+    //public static final String USGS_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
+    public static final String USGS_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query";
 
     /** Sample JSON response for a USGS query */
     private static final String SAMPLE_JSON_RESPONSE = "{\"type\":\"FeatureCollection\",\"metadata\":{\"generated\":1462295443000,\"url\":\"http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2016-01-01&endtime=2016-01-31&minmag=6&limit=10\",\"title\":\"USGS Earthquakes\",\"status\":200,\"api\":\"1.5.2\",\"limit\":10,\"offset\":1,\"count\":10},\"features\":[{\"type\":\"Feature\",\"properties\":{\"mag\":7.2,\"place\":\"88km N of Yelizovo, Russia\",\"time\":1454124312220,\"updated\":1460674294040,\"tz\":720,\"url\":\"http://earthquake.usgs.gov/earthquakes/eventpage/us20004vvx\",\"detail\":\"http://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us20004vvx&format=geojson\",\"felt\":2,\"cdi\":3.4,\"mmi\":5.82,\"alert\":\"green\",\"status\":\"reviewed\",\"tsunami\":1,\"sig\":798,\"net\":\"us\",\"code\":\"20004vvx\",\"ids\":\",at00o1qxho,pt16030050,us20004vvx,gcmt20160130032510,\",\"sources\":\",at,pt,us,gcmt,\",\"types\":\",cap,dyfi,finite-fault,general-link,general-text,geoserve,impact-link,impact-text,losspager,moment-tensor,nearby-cities,origin,phase-data,shakemap,tectonic-summary,\",\"nst\":null,\"dmin\":0.958,\"rms\":1.19,\"gap\":17,\"magType\":\"mww\",\"type\":\"earthquake\",\"title\":\"M 7.2 - 88km N of Yelizovo, Russia\"},\"geometry\":{\"type\":\"Point\",\"coordinates\":[158.5463,53.9776,177]},\"id\":\"us20004vvx\"},\n" +
@@ -83,10 +88,22 @@ public final class QueryUtils {
         // Return the list of earthquakes
         return earthquakes;
     }
-    private static URL createUrl(String stringUrl) {
+    private static URL createUrl(String stringUrl, Context context) {
         URL url = null;
         try {
-            url = new URL(stringUrl);
+            //url = new URL(stringUrl);
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+            String minMagnitude = sharedPrefs.getString(
+                    context.getString(R.string.settings_min_magnitude_key),
+                    context.getString(R.string.settings_min_magnitude_default));
+            Uri baseUri = Uri.parse(stringUrl);
+            Uri.Builder uriBuilder = baseUri.buildUpon();
+
+            uriBuilder.appendQueryParameter("format", "geojson");
+            uriBuilder.appendQueryParameter("limit", "10");
+            uriBuilder.appendQueryParameter("minmag", minMagnitude);
+            uriBuilder.appendQueryParameter("orderby", "time");
+            url = new URL(uriBuilder.toString());
         } catch (MalformedURLException e) {
             Log.e(LOG_TAG, "Error with creating URL ", e);
         }
@@ -95,9 +112,9 @@ public final class QueryUtils {
     /**
      * Query the USGS dataset and return a List<Eartquake> object.
      */
-    public static List<Eartquake> fetchEarthquakeData(String requestUrl) {
+    public static List<Eartquake> fetchEarthquakeData(String requestUrl, Context context) {
         // Create URL object
-        URL url = createUrl(requestUrl);
+        URL url = createUrl(requestUrl, context);
         Log.w("QueryUtils","Started fetching data");
         //Thread.sleep introduced artificially to simulate slow network
         try {
